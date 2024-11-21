@@ -23,3 +23,10 @@ Afterwards, perform a `rm order.txt data.pickle` to reset for the next order.
 ## Profit!
 
 In order to make unique codes, prices have a margin on top of about 10 cents each on average. The order-master's profit!
+
+# Note for developers!!!
+
+We would like you to stick to the gitflow as merge conflicts happened before. This means that we develop on the "dev" branch and add a feature to the dev branch by merging "feature" branches into the dev branch.
+For more info on gitflow: visit the link bellow
+
+https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow

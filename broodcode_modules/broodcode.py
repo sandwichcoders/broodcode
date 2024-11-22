@@ -70,6 +70,25 @@ def format_price(price):
     return f"{euros},{cents:02d}"
 
 
+def add_yirnick_fee(price):
+    return price + 50
+
+
+def format_price(price):
+    """
+    Converts a price in cents to a formatted string in euros with a comma as the decimal separator.
+    
+    Args:
+        price (int): The price in cents.
+    
+    Returns:
+        str: The formatted price in euros, e.g., "6,00" for 600.
+    """
+    euros = price // 100
+    cents = price % 100
+    return f"{euros},{cents:02d}"
+
+
 def fetch_menu():
     try:
         response = requests.get(

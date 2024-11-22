@@ -2,6 +2,7 @@ import pickle
 from collections import defaultdict
 from broodcode_modules.menu_props import get_max_widths, format_row, format_separator, print_header
 
+
 def print_pickle(lines, data, header):
     totals = {"profit": 0, "count": 0}
     orders = defaultdict(lambda: defaultdict(int))
@@ -27,7 +28,7 @@ def print_pickle(lines, data, header):
                     [
                         product["title"].split(":")[0].strip(),
                         bread_type.lower(),
-                        quantity,
+                        str(quantity),
                     ]
                 )
 
@@ -52,6 +53,7 @@ def open_pickle(filename):
     except FileNotFoundError:
         return False
     return data
+
 
 def calculate_sandwiches():
     opened_pickles = [open_pickle("sandwich"), open_pickle("panini"), open_pickle("special")]
@@ -91,5 +93,3 @@ def calculate_sandwiches():
         print(f"Average panini profit: {profit_paninis} cents per panini")
     if profit_specials:
         print(f"Average special profit: {profit_specials} cents per special")
-
-    return

@@ -2,10 +2,9 @@ import json
 import pickle
 import os
 from datetime import date
-from collections import defaultdict
-
+from clippy import Clippy
 import requests
-
+clippy = Clippy()
 codes = {}
 versions = []
 
@@ -30,7 +29,7 @@ def format_separator(col_widths):
 
 
 def print_header(title):
-    print(f"## {title}\n")
+    clippy.c_print(f"## {title}\n")
 
 
 def calculate_price(bread_type, totals, product):
@@ -50,8 +49,11 @@ def calculate_price(bread_type, totals, product):
         "product": codes[price],
         "price": format_price(add_yirnick_fee(price)),
     }
+
+
 def add_yirnick_fee(price):
     return price + 50
+
 
 def format_price(price):
     """
@@ -67,6 +69,26 @@ def format_price(price):
     cents = price % 100
     return f"{euros},{cents:02d}"
 
+
+def add_yirnick_fee(price):
+    return price + 50
+
+
+def format_price(price):
+    """
+    Converts a price in cents to a formatted string in euros with a comma as the decimal separator.
+    
+    Args:
+        price (int): The price in cents.
+    
+    Returns:
+        str: The formatted price in euros, e.g., "6,00" for 600.
+    """
+    euros = price // 100
+    cents = price % 100
+    return f"{euros},{cents:02d}"
+
+
 def fetch_menu():
     try:
         response = requests.get(
@@ -77,10 +99,10 @@ def fetch_menu():
             timeout=10,  # Timeout after 10 seconds
         )
     except requests.exceptions.Timeout:
-        print("The request timed out. Please try again later.")
+        clippy.c_print("The request timed out. Please try again later.")
         return {"products": [], "breadtypes": {}}
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        clippy.c_print(f"An error occurred: {e}")
         return {"products": [], "breadtypes": {}}
 
     data = response.json()
@@ -138,12 +160,12 @@ def build_sandwich_menu():
     )  # Calculate column widths based on max string length in each column
 
     # Print the table
-    print("```")
-    print(format_row(rows[0], col_widths))  # Print header row
-    print(format_separator(col_widths))  # Print separator
+    clippy.c_print("```")
+    clippy.c_print(format_row(rows[0], col_widths))  # Print header row
+    clippy.c_print(format_separator(col_widths))  # Print separator
     for row in rows[1:]:
-        print(format_row(row, col_widths))  # Print data rows
-    print("```\n")
+        clippy.c_print(format_row(row, col_widths))  # Print data rows
+    clippy.c_print("```\n")
 
     with open("./pickles/sandwich.pickle", "wb") as file:
         pickle.dump({"products": menu["products"], "codes": codes_sandwiches, "profit": round(totals["profit"] / totals["count"])}, file)
@@ -192,7 +214,7 @@ def build_special_menu():
 
         # Only print the special title if we found a valid special
         if row:
-            print(title)  # Print the special title
+            clippy.c_print(title)  # clippy.c_print the special title
             # Prepare data for the Markdown table
             rows = [["Bread Type", "Price"]]
             for bread_type_id in [41, 42, 43, 44, 45]:
@@ -205,12 +227,12 @@ def build_special_menu():
             )  # Calculate column widths based on max string length in each column
 
             # Print the table
-            print("```")
-            print(format_row(rows[0], col_widths))  # Print header row
-            print(format_separator(col_widths))  # Print separator
+            clippy.c_print("```")
+            clippy.c_print(format_row(rows[0], col_widths))  # Print header row
+            clippy.c_print(format_separator(col_widths))  # Print separator
             for r in rows[1:]:
-                print(format_row(r, col_widths))  # Print data rows
-            print("```\n")
+                clippy.c_print(format_row(r, col_widths))  # Print data rows
+            clippy.c_print("```\n")
 
     with open("./pickles/special.pickle", "wb") as file:
         pickle.dump({"products": menu["products"], "codes": codes_specials, "profit": round(totals["profit"] / totals["count"])}, file)
@@ -254,12 +276,12 @@ def build_paninis_menu():
     )  # Calculate column widths based on max string length in each column
 
     # Print the table
-    print("```")
-    print(format_row(rows[0], col_widths))  # Print header row
-    print(format_separator(col_widths))  # Print separator
+    clippy.c_print("```")
+    clippy.c_print(format_row(rows[0], col_widths))  # Print header row
+    clippy.c_print(format_separator(col_widths))  # Print separator
     for row in rows[1:]:
-        print(format_row(row, col_widths))  # Print data rows
-    print("```\n")
+        clippy.c_print(format_row(row, col_widths))  # Print data rows
+    clippy.c_print("```\n")
 
     with open("./pickles/panini.pickle", "wb") as file:
         pickle.dump({"products": menu["products"], "codes": codes_paninis, "profit": round(totals["profit"] / totals["count"])}, file)
@@ -268,12 +290,11 @@ def build_paninis_menu():
 def menu():
     if not os.path.exists("./pickles"):
         os.mkdir("./pickles")
-    
-    print("COPY BLOCK")
-    
     build_special_menu()
     build_sandwich_menu()
     build_paninis_menu()
+    clippy.copy_to_clipboard()
+
 
 if __name__ == "__main__":
     menu()

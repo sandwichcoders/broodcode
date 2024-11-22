@@ -18,14 +18,14 @@ def format_row(row_items, col_widths):
     """Format a row with variable column width based on longest content."""
     return (
         "|"
-        + "|".join(f"{str(item):<{col_widths[i]}}" for i, item in enumerate(row_items))
+        + "|".join(f" {str(item):<{col_widths[i]}}" for i, item in enumerate(row_items))
         + "|"
     )
 
 
 def format_separator(col_widths):
     """Create a separator row based on column widths for Markdown table."""
-    return "|" + "|".join("-" * col_width for col_width in col_widths) + "|"
+    return "|-" + "|-".join("-" * col_width for col_width in col_widths) + "|"
 
 
 def print_header(title):
@@ -68,7 +68,6 @@ def format_price(price):
     euros = price // 100
     cents = price % 100
     return f"{euros},{cents:02d}"
-
 
 def add_yirnick_fee(price):
     return price + 50
@@ -294,6 +293,7 @@ def menu():
     build_sandwich_menu()
     build_paninis_menu()
     clippy.copy_to_clipboard()
+
 
 
 if __name__ == "__main__":

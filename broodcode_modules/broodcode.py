@@ -2,7 +2,7 @@ import json
 import pickle
 import os
 from datetime import date
-from clippy import Clippy
+from broodcode_modules.clippy import Clippy
 import requests
 clippy = Clippy()
 codes = {}

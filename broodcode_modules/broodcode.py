@@ -11,7 +11,6 @@ versions = []
 
 def get_max_widths(rows):
     """Calculate maximum column width based on longest string in each column."""
-    # cool function
     return [max(len(str(item)) for item in col) for col in zip(*rows, strict=False)]
 
 

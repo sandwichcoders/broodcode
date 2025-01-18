@@ -1,7 +1,7 @@
 from broodcode_modules.broodcode import menu
 from broodcode_modules.calculate_sandwiches import calculate_sandwiches
 
-APP_VERSION = "2.0.0"
+APP_VERSION = "2.0.1"
 
 # For future features below...
 # Option 3 will say which sandwiches doesn´t contain these ingredients

@@ -2,7 +2,7 @@ import json
 import pickle
 import os
 from datetime import date
-from clippy import Clippy
+from broodcode_modules.clippy import Clippy
 import requests
 clippy = Clippy()
 codes = {}
@@ -50,24 +50,6 @@ def calculate_price(bread_type, totals, product):
         "price": format_price(add_yirnick_fee(price)),
     }
 
-
-def add_yirnick_fee(price):
-    return price + 50
-
-
-def format_price(price):
-    """
-    Converts a price in cents to a formatted string in euros with a comma as the decimal separator.
-    
-    Args:
-        price (int): The price in cents.
-    
-    Returns:
-        str: The formatted price in euros, e.g., "6,00" for 600.
-    """
-    euros = price // 100
-    cents = price % 100
-    return f"{euros},{cents:02d}"
 
 def add_yirnick_fee(price):
     return price + 50
@@ -258,15 +240,9 @@ def build_paninis_menu():
         # Initialize row with panini name
         row = [product["title"].strip()]
 
-        if (
-            43 in compatible_bread_type_ids and 43 in menu["breadtypes"]
-        ):  # ID for Focaccia
-            prices = calculate_price(menu["breadtypes"][43], totals, product)
-            codes_paninis[prices["price"].replace(",", "")] = prices["product"]
-            row.append(str(prices["price"]))
-        else:
-            row.append("-")
-
+        prices = calculate_price(menu["breadtypes"][43], totals, product)
+        codes_paninis[prices["price"].replace(",", "")] = prices["product"]
+        row.append(str(prices["price"]))
         # Add row to rows list
         rows.append(row)
 
@@ -293,8 +269,6 @@ def menu():
     build_sandwich_menu()
     build_paninis_menu()
     clippy.copy_to_clipboard()
-
-
 
 if __name__ == "__main__":
     menu()

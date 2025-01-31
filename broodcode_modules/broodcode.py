@@ -4,6 +4,12 @@ import os
 from datetime import date
 from broodcode_modules.clippy import Clippy
 import requests
+from BroodCodeCore.fetch import fetch_menu
+from BroodCodeCore.pickle_storage import store_to_pickle
+from BroodCodeCore.prices import calculate_price
+
+FEE = 50
+
 clippy = Clippy()
 codes = {}
 versions = []
@@ -32,25 +38,6 @@ def print_header(title):
     clippy.c_print(f"## {title}\n")
 
 
-def calculate_price(bread_type, totals, product):
-    org_price = price = round(product["price"] * 100 + bread_type["surcharge"] * 100)
-    while price in codes:
-        price += 1
-    profit = price - org_price
-    totals["profit"] += profit
-    totals["count"] += 1
-
-    codes[price] = (product["title"], bread_type["name"], profit)
-    versions.append(f"{bread_type['name'].lower()}={price}")
-
-    return {
-        "profit": totals["profit"],
-        "count": totals["count"],
-        "product": codes[price],
-        "price": format_price(add_yirnick_fee(price)),
-    }
-
-
 def add_yirnick_fee(price):
     return price + 50
 
@@ -68,29 +55,6 @@ def format_price(price):
     euros = price // 100
     cents = price % 100
     return f"{euros},{cents:02d}"
-
-
-def fetch_menu():
-    try:
-        response = requests.get(
-            f"https://bestellen.broodbode.nl/v2-2/pccheck/null/{date.today()}/afhalen/8?cb=1695969466297",
-            headers={
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0"
-            },
-            timeout=10,  # Timeout after 10 seconds
-        )
-    except requests.exceptions.Timeout:
-        clippy.c_print("The request timed out. Please try again later.")
-        return {"products": [], "breadtypes": {}}
-    except requests.exceptions.RequestException as e:
-        clippy.c_print(f"An error occurred: {e}")
-        return {"products": [], "breadtypes": {}}
-
-    data = response.json()
-    products = data["products"]
-    bread_types_by_id = {b["id"]: b for b in data["breadtypes"]}
-
-    return {"products": products, "breadtypes": bread_types_by_id}
 
 
 def build_sandwich_menu():
@@ -152,50 +116,24 @@ def build_sandwich_menu():
         pickle.dump({"products": menu["products"], "codes": codes_sandwiches, "profit": round(totals["profit"] / totals["count"])}, file)
 
 
-def build_special_menu():
+def build_special_menu(menu):
     totals = {"profit": 0, "count": 0}
     codes_specials = {}
 
-    menu = fetch_menu()
+    special_price = calculate_price(menu["special"], menu["breadtypes"], "special", FEE)
 
     print_header("Special of the Week")
 
-    for product in sorted(menu["products"], key=lambda product: product["price"]):
-        if not product["breadtypes"]:
-            continue
-        if "special" not in product["title"].lower():
-            continue
-
-        compatible_bread_type_ids = json.loads(product["breadtypes"])
-        versions.clear()
-
-        # Remove the "Special van de week" prefix
-        title = (
-            product["title"]
-            .replace("Special van de week : ", "")
-            .replace(".", "")
-            .strip()
-        )
+    for product in special_price:
 
         # Initialize row for the special menu
         row = []
-        bread_type_ids = [41, 42, 43, 44, 45]
-        for bread_type_id in bread_type_ids:  # IDs for White, Grain, Focaccia, Spelt, Gluten-Free
-            if (
-                bread_type_id in compatible_bread_type_ids
-                and bread_type_id in menu["breadtypes"]
-            ):
-                prices = calculate_price(
-                    menu["breadtypes"][bread_type_id], totals, product
-                )
-                codes_specials[prices["price"].replace(",", "")] = prices["product"]
-                row.append(str(prices["price"]))
-            else:
-                row.append("-")
+        keys = special_price.keys()
+        row.append(keys[0])
 
         # Only print the special title if we found a valid special
         if row:
-            clippy.c_print(title)  # clippy.c_print the special title
+            clippy.c_print(special_price[product][0])  # clippy.c_print the special title
             # Prepare data for the Markdown table
             rows = [["Bread Type", "Price"]]
             for bread_type_id in [41, 42, 43, 44, 45]:
@@ -214,9 +152,6 @@ def build_special_menu():
             for r in rows[1:]:
                 clippy.c_print(format_row(r, col_widths))  # Print data rows
             clippy.c_print("```\n")
-
-    with open("./pickles/special.pickle", "wb") as file:
-        pickle.dump({"products": menu["products"], "codes": codes_specials, "profit": round(totals["profit"] / totals["count"])}, file)
 
 
 def build_paninis_menu():
@@ -263,9 +198,10 @@ def build_paninis_menu():
 
 
 def menu():
+    menu = fetch_menu()
     if not os.path.exists("./pickles"):
         os.mkdir("./pickles")
-    build_special_menu()
+    build_special_menu(menu)
     build_sandwich_menu()
     build_paninis_menu()
     clippy.copy_to_clipboard()

@@ -1,6 +1,7 @@
 import pickle
 from collections import defaultdict
 from broodcode_modules.menu_props import get_max_widths, format_row, format_separator, print_header
+from BroodCodeCore.calc_sandwiches import calculate_sandwiches
 
 
 def print_pickle(lines, data, header):
@@ -11,13 +12,6 @@ def print_pickle(lines, data, header):
 
     # Prepare data for table rows
     rows = [["Sandwich", "Type", "Quantity"]]
-
-    for line in lines:
-        if line in data["codes"]:
-            title, bread_type, profit = data["codes"][line]
-            orders[title][bread_type] += 1
-            totals["profit"] += profit
-            totals["count"] += 1
 
     for product in data["products"]:
         o = orders.get(product["title"])
@@ -55,8 +49,8 @@ def open_pickle(filename):
     return data
 
 
-def calculate_sandwiches():
-    opened_pickles = [open_pickle("sandwich"), open_pickle("panini"), open_pickle("special")]
+def fetch_orders():
+    orders = calculate_sandwiches("orders", ["sandwiches", "paninis", "special"])
 
     print("COPY BLOCK")
 
@@ -64,12 +58,12 @@ def calculate_sandwiches():
     profit_paninis = None
     profit_specials = None
 
-    for pickle in opened_pickles:
+    for pickle in orders:
         if pickle is False:
             print("You haven´t fetched the menu yet. Do that first before you try to calculate the amount of sandwiches")
             return
     try:
-        with open("order.txt") as file:
+        with open("orders.txt") as file:
             lines = [line.strip() for line in file.readlines() if line.strip()]
     except FileNotFoundError:
         print(
@@ -77,9 +71,9 @@ def calculate_sandwiches():
         )
         return
     
-    for index, pickle in enumerate(opened_pickles):
+    for index, pickle in enumerate(orders):
         messages = ["Freshly topped sandwiches", "Paninis", "Special of the Week"]
-        print_pickle(lines, pickle, messages[index])
+        print_pickle(lines, orders[pickle], messages[index])
 
     print("Don't forget to copy the sentence below to put in the notes on the order summary screen:")
     print("'Graag, als dit mogelijk is, de broodsoorten op de zakken schrijven b.v.d.'")

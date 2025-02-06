@@ -101,9 +101,6 @@ def build_sandwich_menu(menu):
 
 
 def build_special_menu(menu):
-    totals = {"profit": 0, "count": 0}
-    codes_specials = {}
-
     special_price = calculate_price(menu["special"], menu["breadtypes"], "special", FEE)
 
     print_header("Special of the Week")

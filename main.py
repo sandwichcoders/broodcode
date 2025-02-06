@@ -1,5 +1,5 @@
 from broodcode_modules.broodcode import menu
-from broodcode_modules.calculate_sandwiches import calculate_sandwiches
+from broodcode_modules.calculate_sandwiches import fetch_orders
 
 APP_VERSION = "2.0.1"
 
@@ -28,7 +28,7 @@ def main():
             case 1:
                 menu()
             case 2:
-                calculate_sandwiches() # calculate the sandwiches in this option
+                fetch_orders() # calculate the sandwiches in this option
             case 3:
                 exit() # request the sandwich ingredients in this option
             case _:

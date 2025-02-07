@@ -1,11 +1,5 @@
-import json
-import pickle
-import os
-from datetime import date
 from broodcode_modules.clippy import Clippy
-import requests
 from BroodCodeCore.fetch import fetch_menu
-from BroodCodeCore.pickle_storage import store_to_pickle
 from BroodCodeCore.prices import calculate_price
 
 FEE = 50
@@ -37,25 +31,6 @@ def format_separator(col_widths):
 def print_header(title):
     clippy.c_print(f"## {title}\n")
 
-
-def add_yirnick_fee(price):
-    return price + 50
-
-
-def format_price(price):
-    """
-    Converts a price in cents to a formatted string in euros with a comma as the decimal separator.
-    
-    Args:
-        price (int): The price in cents.
-    
-    Returns:
-        str: The formatted price in euros, e.g., "6,00" for 600.
-    """
-    euros = price // 100
-    cents = price % 100
-    return f"{euros},{cents:02d}"
-
 def simplify_menu(products):
     simplified_menu = []
     product_and_prices = []
@@ -76,9 +51,6 @@ def simplify_menu(products):
 
 
 def build_sandwich_menu(menu):
-    totals = {"profit": 0, "count": 0}
-    codes_sandwiches = {}
-
     sandwich_price = calculate_price(menu["sandwiches"], menu["breadtypes"], "sandwiches", FEE)
 
     print_header("Freshly topped sandwiches")
@@ -135,9 +107,6 @@ def build_special_menu(menu):
 
 
 def build_paninis_menu(menu):
-    totals = {"profit": 0, "count": 0}
-    codes_paninis = {}
-
     panini_price = calculate_price(menu["paninis"], menu["breadtypes"], "paninis", FEE)
 
     print_header("Panini's")

@@ -69,8 +69,9 @@ def simplify_menu(products):
 
         if len(product_and_prices) == 0:
             product_and_prices.append(products[product][0])
-        else:
-            product_and_prices.append(product)
+
+        product_and_prices.append(product)
+
     return simplified_menu
 
 
@@ -111,7 +112,7 @@ def build_special_menu(menu):
 
     # Only print the special title if we found a valid special
     if row:
-        special_product = special_price[row[0]][0].split(" : ")
+        special_product = special_price[row[0]][0].split(" - ")
         clippy.c_print(special_product[1])  # clippy.c_print the special title
         # Prepare data for the Markdown table
         rows = [["Bread Type", "Price"]]

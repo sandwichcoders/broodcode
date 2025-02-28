@@ -3,3 +3,5 @@
 *.pyc
 order.txt
 ./idea
+/.idea
+orders.txt

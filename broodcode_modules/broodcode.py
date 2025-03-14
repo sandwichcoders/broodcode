@@ -85,7 +85,7 @@ def build_special_menu(menu):
     # Only print the special title if we found a valid special
     if row:
         special_product = special_price[row[0]][0].split(" - ")
-        clippy.c_print(special_product[1])  # clippy.c_print the special title
+        clippy.c_print(special_product[0])  # clippy.c_print the special title
         # Prepare data for the Markdown table
         rows = [["Bread Type", "Price"]]
         for bread_type_id in [41, 42, 43, 44, 45]:

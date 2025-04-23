@@ -1,6 +1,7 @@
 from broodcode_modules.clippy import Clippy
 from BroodCodeCore.fetch import fetch_menu
 from BroodCodeCore.prices import calculate_price
+from BroodCodeCore.pickle_storage import store_to_pickle
 
 FEE = 50
 
@@ -133,6 +134,11 @@ def build_paninis_menu(menu):
         clippy.c_print(format_row(row, col_widths))  # Print data rows
     clippy.c_print("```\n")
 
+def add_forgotten_sandwiches():
+    customer = input("What is the name of the customer whose sandwich is missing: ")
+    sandwich = input("Which sandwich is he/she missing: ")
+    store_to_pickle("forgotten", {"sandwich_name": sandwich, "ordered_by": customer}, False)
+    print(f"{customer}'s sandwich {sandwich} has been added to the forgotten sandwiches")
 
 def menu():
     menu = fetch_menu()

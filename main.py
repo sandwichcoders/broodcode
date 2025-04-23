@@ -1,4 +1,4 @@
-from broodcode_modules.broodcode import menu
+from broodcode_modules.broodcode import menu, add_forgotten_sandwiches
 from broodcode_modules.calculate_sandwiches import fetch_orders
 from BroodCodeCore.about import get_full_info
 
@@ -25,8 +25,9 @@ def main():
         print("""
             1. Show the menu
             2. Calculate ordered sandwiches
-            3. About BroodCode
-            4. Exit
+            3. Add a forgotten sandwich
+            4. About Broodcode
+            5. Exit
             """)
         while True:
             try:
@@ -40,11 +41,13 @@ def main():
             case 1:
                 menu()
             case 2:
-                fetch_orders() # calculate the sandwiches in this option
+                fetch_orders()
             case 3:
-                about()
+                add_forgotten_sandwiches()
             case 4:
-                exit() # request the sandwich ingredients in this option
+                about()
+            case 5:
+                exit()
             case _:
                 print("This number does not have an available option. please try another one")
 

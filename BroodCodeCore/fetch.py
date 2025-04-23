@@ -25,6 +25,9 @@ def fetch_menu():
         return {"products": [], "breadtypes": {}}
 
     data = response.json()
+    if 'errorMessage' in data:
+        clippy.c_print(f"\033[31mCORE ERROR: Because Broodbode is closed, their API refuses to give the menu. Try again tomorrow.\033[0m")
+        return {"products": [], "breadtypes": {}}
     products = data["products"]
     bread_types_by_id = {b["id"]: b for b in data["breadtypes"]}
 

@@ -1,6 +1,6 @@
 NAME = "BroodCode Core"
 AUTHOR = "Yirnick van Dijk"
-VERSION = "1.0.1"
+VERSION = "1.1.0"
 
 def get_full_info():
     """Get the full information about the BroodCode Core
@@ -10,3 +10,23 @@ def get_full_info():
     """
     return f"{NAME} by {AUTHOR}. Version {VERSION}"
 
+def get_name():
+    """Get the name of the software
+
+    :return: The name of the software
+    """
+    return NAME
+
+def get_author():
+    """Get the author's name
+
+    :return: The author's name
+    """
+    return AUTHOR
+
+def get_version():
+    """Get the software's version number
+
+    :return: The software's version number
+    """
+    return VERSION

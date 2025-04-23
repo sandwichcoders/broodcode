@@ -45,7 +45,7 @@ def calculate_price(menu: list, sandwich_props: dict[bread_type_typing], pickle_
             totals["profit"] += profit
             totals["count"] += 1
 
-            codes[price] = (product["title"], bread_type_name, profit)
+            codes[price] = (product["title"], bread_type_name, profit, product["subtitle"])
             versions.append(f"{bread_type_name.lower()}={price}")
 
             updated_menu[_format_price(_add_order_fee(price, fee))] = codes[price]

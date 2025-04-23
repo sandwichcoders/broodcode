@@ -22,8 +22,14 @@ def calculate_sandwiches(orders: str, pickles: list):
         )
         return
 
+    if read_from_pickle("forgotten"):
+        pickles.append("forgotten")
+
     for pickle in pickles:
         opened_pickle = read_from_pickle(pickle)
+        if pickle == "forgotten":
+            calculated_orders[pickle] = opened_pickle
+            continue
         calculated_orders[pickle] = _sum_up_sandwiches(lines, opened_pickle)
 
     return calculated_orders

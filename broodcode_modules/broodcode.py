@@ -47,6 +47,7 @@ def simplify_menu(products):
 
         product_and_prices.append(product)
 
+    simplified_menu += [product_and_prices]
     return simplified_menu
 
 

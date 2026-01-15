@@ -2,10 +2,11 @@ import requests
 import json
 from datetime import date
 from BroodCodeCore.clippy import Clippy
+from BroodCodeCore.utils import check_breadtypes
 clippy = Clippy()
 
 def fetch_menu():
-    """Fetch the menu from the Broodbode API
+    """Fetch the menu from the Broodbode APIa
 
     :return: A raw but categorised and stripped version of the menu
     """
@@ -47,7 +48,7 @@ def _strip_menu(full_menu):
 
     for category in menu_categories:
         for product in sorted(full_menu["products"], key=lambda product: product["price"]):
-            if len(json.loads(product["breadtypes"])) > 1 and category == "sandwiches":
+            if len(json.loads(check_breadtypes(product["breadtypes"]))) > 1 and category == "sandwiches":
                 stripped_menu.append(product)
             if "special van de week" in product["title"].lower() and category == "special":
                 stripped_menu.append(product)

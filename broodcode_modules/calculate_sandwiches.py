@@ -59,8 +59,8 @@ def fetch_orders():
         messages = ["Freshly topped sandwiches", "Paninis", "Special of the Week"]
         print_pickle(orders[pickle], messages[index])
 
-    print("Don't forget to copy the sentence below to put in the notes on the order summary screen:")
-    print("'Graag, als dit mogelijk is, de broodsoorten op de zakken schrijven b.v.d.'")
+    print("\033[33mDon't forget to copy the sentence below to put in the notes on the order summary screen:\033[0m")
+    print("'Graag, als dit mogelijk is, de broodsoorten op de zakken schrijven b.v.d. :)'")
 
     print("/COPY BLOCK")
     print()

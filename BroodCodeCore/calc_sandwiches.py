@@ -22,6 +22,12 @@ def calculate_sandwiches(orders: str, pickles: list):
         )
         return
 
+    if not read_from_pickle("sandwiches"):
+        print(
+            "\033[31mYou have to fetch the menu first.\033[0m"
+        )
+        return
+
     if read_from_pickle("forgotten"):
         pickles.append("forgotten")
 
@@ -47,7 +53,7 @@ def _sum_up_sandwiches(lines, data):
 
     for order in paid_orders:
         if order in data["codes"]:
-            title, bread_type, profit = data["codes"][order]
+            title, bread_type, profit, ingredients = data["codes"][order]
             orders[title][bread_type] += 1
             totals["profit"] += profit
             totals["count"] += 1

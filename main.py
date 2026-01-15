@@ -1,6 +1,7 @@
 from broodcode_modules.broodcode import menu
 from broodcode_modules.calculate_sandwiches import fetch_orders
 from BroodCodeCore.about import get_full_info
+from BroodCodeCore.pickle_storage import delete_all_pickles
 
 APP_VERSION = "3.0.0"
 
@@ -26,7 +27,8 @@ def main():
             1. Show the menu
             2. Calculate ordered sandwiches
             3. About BroodCode
-            4. Exit
+            4. Delete all created pickles
+            5. Exit
             """)
         while True:
             try:
@@ -40,10 +42,12 @@ def main():
             case 1:
                 menu()
             case 2:
-                fetch_orders() # calculate the sandwiches in this option
+                fetch_orders()
             case 3:
                 about()
             case 4:
+                delete_all_pickles()
+            case 5:
                 exit() # request the sandwich ingredients in this option
             case _:
                 print("This number does not have an available option. please try another one")

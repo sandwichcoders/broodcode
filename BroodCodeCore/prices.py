@@ -1,4 +1,5 @@
 from BroodCodeCore.pickle_storage import store_to_pickle
+from BroodCodeCore.utils import check_breadtypes
 import json
 
 codes = {}
@@ -32,7 +33,7 @@ def calculate_price(menu: list, sandwich_props: dict[bread_type_typing], pickle_
     updated_menu = {}
 
     for product in sorted(menu, key=lambda product: product["price"]):
-        bread_type_ids = json.loads(product["breadtypes"])
+        bread_type_ids = json.loads(check_breadtypes(product["breadtypes"]))
         org_price = price = round(product["price"] * 100)
         bread_type_name = "General"
         for bread_type_id in [41, 42, 43, 44, 45]:
@@ -45,7 +46,7 @@ def calculate_price(menu: list, sandwich_props: dict[bread_type_typing], pickle_
             totals["profit"] += profit
             totals["count"] += 1
 
-            codes[price] = (product["title"], bread_type_name, profit)
+            codes[price] = (product["title"], bread_type_name, profit, product["subtitle"])
             versions.append(f"{bread_type_name.lower()}={price}")
 
             updated_menu[_format_price(_add_order_fee(price, fee))] = codes[price]
